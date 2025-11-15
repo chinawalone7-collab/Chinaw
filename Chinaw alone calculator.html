@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChinawAlone Calculator</title>
+<style>
+    /* General Styles */
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100%;
+    }
+    button {
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        transition: transform 0.2s;
+    }
+    button:hover {
+        transform: scale(1.1);
+    }
+
+    /* Page Styles */
+    .page {
+        display: none;
+        width: 100%;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    /* Home Page with Spider-Man Background */
+    #home {
+        display: flex;
+        background: url('https://i.imgur.com/8PafZbE.jpg') no-repeat center center/cover;
+        color: white;
+        text-align: center;
+    }
+    #home h1 {
+        font-size: 60px;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 5px black;
+    }
+    #home button {
+        font-size: 24px;
+        background: rgba(255,0,0,0.8);
+        color: white;
+        padding: 15px 40px;
+        border-radius: 10px;
+        border: 2px solid white;
+    }
+
+    /* Calculator Styles */
+    .calculator {
+        background: linear-gradient(to right, #ff4c4c, #4c6cff);
+        padding: 20px;
+        border-radius: 15px;
+        display: inline-block;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+    }
+    .display {
+        width: 260px;
+        height: 50px;
+        margin-bottom: 10px;
+        font-size: 24px;
+        text-align: right;
+        padding-right: 10px;
+        border-radius: 5px;
+        border: none;
+    }
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 60px);
+        grid-gap: 10px;
+    }
+    .buttons button {
+        font-size: 18px;
+        background: white;
+        color: black;
+    }
+    .switch-btn {
+        margin-top: 20px;
+        background: yellow;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<!-- Home Page -->
+<div id="home" class="page">
+    <h1>ChinawAlone Calculator</h1>
+    <button onclick="showPage('normal')">Start Calculator</button>
+</div>
+
+<!-- Normal Calculator Page -->
+<div id="normal" class="page">
+    <div class="calculator">
+        <input type="text" id="displayNormal" class="display" disabled>
+        <div class="buttons">
+            <button onclick="appendNormal('7')">7</button>
+            <button onclick="appendNormal('8')">8</button>
+            <button onclick="appendNormal('9')">9</button>
+            <button onclick="appendNormal('/')">/</button>
+
+            <button onclick="appendNormal('4')">4</button>
+            <button onclick="appendNormal('5')">5</button>
+            <button onclick="appendNormal('6')">6</button>
+            <button onclick="appendNormal('*')">*</button>
+
+            <button onclick="appendNormal('1')">1</button>
+            <button onclick="appendNormal('2')">2</button>
+            <button onclick="appendNormal('3')">3</button>
+            <button onclick="appendNormal('-')">-</button>
+
+            <button onclick="appendNormal('0')">0</button>
+            <button onclick="appendNormal('.')">.</button>
+            <button onclick="calculateNormal()">=</button>
+            <button onclick="appendNormal('+')">+</button>
+
+            <button onclick="clearNormal()" style="grid-column: span 4; background: red; color:white;">C</button>
+        </div>
+        <button class="switch-btn" onclick="showPage('scientific')">Switch to Scientific</button>
+    </div>
+</div>
+
+<!-- Scientific Calculator Page -->
+<div id="scientific" class="page">
+    <div class="calculator">
+        <input type="text" id="displaySci" class="display" disabled>
+        <div class="buttons">
+            <button onclick="appendSci('7')">7</button>
+            <button onclick="appendSci('8')">8</button>
+            <button onclick="appendSci('9')">9</button>
+            <button onclick="appendSci('/')">/</button>
+
+            <button onclick="appendSci('4')">4</button>
+            <button onclick="appendSci('5')">5</button>
+            <button onclick="appendSci('6')">6</button>
+            <button onclick="appendSci('*')">*</button>
+
+            <button onclick="appendSci('1')">1</button>
+            <button onclick="appendSci('2')">2</button>
+            <button onclick="appendSci('3')">3</button>
+            <button onclick="appendSci('-')">-</button>
+
+            <button onclick="appendSci('0')">0</button>
+            <button onclick="appendSci('.')">.</button>
+            <button onclick="calculateSci()">=</button>
+            <button onclick="appendSci('+')">+</button>
+
+            <button onclick="appendSci('Math.sin(')">sin</button>
+            <button onclick="appendSci('Math.cos(')">cos</button>
+            <button onclick="appendSci('Math.tan(')">tan</button>
+            <button onclick="appendSci('Math.sqrt(')">√</button>
+
+            <button onclick="appendSci('Math.log(')">log</button>
+            <button onclick="appendSci('**')">^</button>
+            <button onclick="clearSci()" style="grid-column: span 2; background: red; color:white;">C</button>
+        </div>
+        <button class="switch-btn" onclick="showPage('normal')">Back to Normal</button>
+    </div>
+</div>
+
+<script>
+    // Show page function
+    function showPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        document.getElementById(page).style.display = 'flex';
+    }
+
+    // Normal Calculator
+    let displayNormal = document.getElementById('displayNormal');
+    function appendNormal(value) { displayNormal.value += value; }
+    function clearNormal() { displayNormal.value = ''; }
+    function calculateNormal() {
+        try { displayNormal.value = eval(displayNormal.value); }
+        catch { displayNormal.value = 'Error'; }
+    }
+
+    // Scientific Calculator
+    let displaySci = document.getElementById('displaySci');
+    function appendSci(value) { displaySci.value += value; }
+    function clearSci() { displaySci.value = ''; }
+    function calculateSci() {
+        try { displaySci.value = eval(displaySci.value); }
+        catch { displaySci.value = 'Error'; }
+    }
+
+    // Show home page first
+    showPage('home');
+</script>
+
+</body>
+</html>
